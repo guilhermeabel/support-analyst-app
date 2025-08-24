@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import type { Ticket } from "@/lib/mock-data"
 import { Separator } from "./ui/separator"
+import Link from "next/link"
 
 interface TicketDetailContentProps {
 	ticket: Ticket
@@ -59,6 +60,16 @@ const generateAIResponse = (ticket: Ticket) => {
 	return {
 		refinedRequest: `Based on the user's request and their account history, the issue seems to be related to a misconfiguration in their firewall settings. They are unable to access the new storage bucket created yesterday.`,
 		possibleSolution: `1. Verify the firewall rules for the user's account.\n2. Ensure that the IP address range for their application servers is whitelisted.\n3. Check the IAM policy attached to the storage bucket.`,
+		suggestedArticles: [
+			{
+				id: "kb-001",
+				title: "Database Connection Troubleshooting Guide",
+			},
+			{
+				id: "kb-004",
+				title: "SSL Certificate Management Workflow",
+			},
+		],
 	}
 }
 
@@ -194,6 +205,20 @@ export function TicketDetailContent({ ticket, onStatusChange }: TicketDetailCont
 							<div className="bg-accent/10 border-l-4 border-accent p-3 rounded-r-lg text-sm">
 								<strong>Possible Solution:</strong>
 								<pre className="whitespace-pre-wrap font-sans mt-1">{aiResponse.possibleSolution}</pre>
+							</div>
+							<div className="bg-accent/10 border-l-4 border-accent p-3 rounded-r-lg text-sm">
+								<strong>Suggested Articles:</strong>
+								<ul className="mt-2 space-y-2">
+									{aiResponse.suggestedArticles.map((article) => (
+										<li key={article.id}>
+											<Link href={`/knowledge-base/${article.id}`} passHref>
+												<Button variant="link" className="p-0 h-auto">
+													{article.title}
+												</Button>
+											</Link>
+										</li>
+									))}
+								</ul>
 							</div>
 						</div>
 						<div className="text-xs text-muted-foreground mt-1">{formatDate(ticket.createdAt)} (auto-generated)</div>

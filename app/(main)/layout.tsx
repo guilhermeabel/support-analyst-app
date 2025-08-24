@@ -6,15 +6,14 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { useTicketStore } from "@/store/ticket-store"
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-	const openTickets = useTicketStore((state) => state.openTickets)
-	const isPanelOpen = openTickets.length > 0
+	const isTicketPanelOpen = useTicketStore((state) => state.openTickets.length > 0)
 
 	return (
 		<div className="flex h-screen bg-background">
 			<SidebarNav />
 			<ResizablePanelGroup direction="horizontal" className="flex-1">
-				<ResizablePanel defaultSize={isPanelOpen ? 60 : 100}>{children}</ResizablePanel>
-				{isPanelOpen && (
+				<ResizablePanel defaultSize={isTicketPanelOpen ? 60 : 100}>{children}</ResizablePanel>
+				{isTicketPanelOpen && (
 					<>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize={40} minSize={30} maxSize={50}>

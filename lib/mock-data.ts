@@ -1,24 +1,66 @@
-export interface Ticket {
-  id: string
-  subject: string
-  description: string
-  user: {
-    name: string
-    email: string
-    initials: string
-  }
-  assignee?: {
-    name: string
-    email: string
-    initials: string
-  }
-  tags: string[]
-  priority: "low" | "medium" | "high" | "critical"
-  status: "backlog" | "todo" | "doing" | "in_review" | "done"
-  group: string
-  createdAt: string
-  updatedAt: string
+export type { Ticket, User, KnowledgeBaseItem }
+
+interface User {
+  name: string
+  email: string
+  initials: string
 }
+
+interface KnowledgeBaseItem {
+  id: string
+  title: string
+  description: string
+  category: string
+  type: string
+  tags: string[]
+  lastUpdated: string
+  views: number
+  rating: number
+  estimatedReadTime: string
+}
+
+export const mockUsers: User[] = [
+  {
+    name: "Sarah Chen",
+    email: "sarah.chen@company.com",
+    initials: "SC",
+  },
+  {
+    name: "Mike Johnson",
+    email: "mike.johnson@company.com",
+    initials: "MJ",
+  },
+  {
+    name: "Alex Rodriguez",
+    email: "alex.rodriguez@company.com",
+    initials: "AR",
+  },
+  {
+    name: "Emily Davis",
+    email: "emily.davis@company.com",
+    initials: "ED",
+  },
+  {
+    name: "Robert Wilson",
+    email: "robert.wilson@company.com",
+    initials: "RW",
+  },
+  {
+    name: "Lisa Thompson",
+    email: "lisa.thompson@company.com",
+    initials: "LT",
+  },
+  {
+    name: "David Brown",
+    email: "david.brown@company.com",
+    initials: "DB",
+  },
+  {
+    name: "Jennifer Lee",
+    email: "jennifer.lee@company.com",
+    initials: "JL",
+  },
+]
 
 export const mockTickets: Ticket[] = [
   {
@@ -171,6 +213,74 @@ export const mockTickets: Ticket[] = [
     group: "Infrastructure",
     createdAt: "2024-01-12T13:45:00Z",
     updatedAt: "2024-01-12T13:45:00Z",
+  },
+]
+
+export const mockKnowledgeBaseItems: KnowledgeBaseItem[] = [
+  {
+    id: "kb-001",
+    title: "How to fix a broken database connection",
+    description:
+      "This guide will help you troubleshoot and resolve common database connection issues. From connection timeouts to authentication errors, we've got you covered.",
+    category: "Database",
+    type: "Troubleshooting",
+    tags: ["database", "connection", "troubleshooting"],
+    lastUpdated: "2024-01-15T10:00:00Z",
+    views: 1200,
+    rating: 4.5,
+    estimatedReadTime: "5 min",
+  },
+  {
+    id: "kb-002",
+    title: "Understanding API rate limiting",
+    description:
+      "Learn about API rate limiting, its importance, and how to configure it effectively to prevent service degradation during high traffic periods.",
+    category: "API",
+    type: "Documentation",
+    tags: ["api", "rate-limiting", "documentation"],
+    lastUpdated: "2024-01-14T10:00:00Z",
+    views: 800,
+    rating: 4.0,
+    estimatedReadTime: "4 min",
+  },
+  {
+    id: "kb-003",
+    title: "Common SSL certificate errors and solutions",
+    description:
+      "A comprehensive list of SSL certificate errors you might encounter and their solutions. From expired certificates to certificate mismatch errors, we've got you covered.",
+    category: "Security",
+    type: "Troubleshooting",
+    tags: ["ssl", "certificate", "security", "troubleshooting"],
+    lastUpdated: "2024-01-13T10:00:00Z",
+    views: 1500,
+    rating: 4.8,
+    estimatedReadTime: "6 min",
+  },
+  {
+    id: "kb-004",
+    title: "How to optimize application performance",
+    description:
+      "Discover key strategies for improving your application's performance, including caching, database optimization, and code optimization.",
+    category: "Performance",
+    type: "Best Practices",
+    tags: ["performance", "optimization", "best-practices"],
+    lastUpdated: "2024-01-12T10:00:00Z",
+    views: 1000,
+    rating: 4.2,
+    estimatedReadTime: "3 min",
+  },
+  {
+    id: "kb-005",
+    title: "Introduction to load balancing",
+    description:
+      "A beginner's guide to load balancing, its benefits, and how to implement it effectively to distribute traffic across multiple servers.",
+    category: "Infrastructure",
+    type: "Documentation",
+    tags: ["load-balancing", "documentation", "introduction"],
+    lastUpdated: "2024-01-11T10:00:00Z",
+    views: 900,
+    rating: 4.1,
+    estimatedReadTime: "2 min",
   },
 ]
 

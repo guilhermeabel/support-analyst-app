@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -198,7 +199,7 @@ export default function KnowledgeBasePage() {
               {/* Results */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredItems.map((item) => (
-                  <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card key={item.id} className="flex flex-col">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
@@ -215,7 +216,7 @@ export default function KnowledgeBasePage() {
                       <CardTitle className="text-lg">{item.title}</CardTitle>
                       <CardDescription>{item.description}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-1 flex flex-col justify-end">
                       <div className="space-y-3">
                         <div className="flex flex-wrap gap-1">
                           {item.tags.map((tag) => (
@@ -234,10 +235,12 @@ export default function KnowledgeBasePage() {
                           </div>
                           <span>Updated {item.lastUpdated}</span>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full bg-transparent">
-                          <ExternalLink className="h-3 w-3 mr-2" />
-                          Read Article
-                        </Button>
+                        <Link href={`/knowledge-base/${item.id}`} className="w-full">
+                          <Button variant="outline" size="sm" className="w-full bg-transparent">
+                            <Book className="h-3 w-3 mr-2" />
+                            Read Article
+                          </Button>
+                        </Link>
                       </div>
                     </CardContent>
                   </Card>
@@ -298,9 +301,11 @@ export default function KnowledgeBasePage() {
                           <Badge variant="outline" className="text-xs">
                             {item.category}
                           </Badge>
-                          <Button variant="ghost" size="sm">
-                            <ExternalLink className="h-4 w-4" />
-                          </Button>
+                          <Link href={`/knowledge-base/${item.id}`}>
+                            <Button variant="ghost" size="sm">
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </Link>
                         </div>
                       ))}
                   </div>
