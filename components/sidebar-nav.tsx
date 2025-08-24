@@ -32,12 +32,6 @@ const navigation = [
     icon: Book,
     description: "Company docs and resources",
   },
-  {
-    name: "Settings",
-    href: "/settings",
-    icon: Settings,
-    description: "Account preferences",
-  },
 ]
 
 export function SidebarNav() {
@@ -94,19 +88,46 @@ export function SidebarNav() {
       </nav>
 
       {/* Footer */}
-      {!isCollapsed && (
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center">
-              <span className="text-xs font-medium text-accent-foreground">JD</span>
+      <div className="mt-auto p-4 border-t border-sidebar-border">
+        {isCollapsed ? (
+          <Link
+            href="/settings"
+            className={cn(
+              "flex justify-center rounded-lg p-2 text-sm font-medium transition-colors",
+              "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              pathname === "/settings"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                : "text-sidebar-foreground",
+            )}
+          >
+            <Settings className="h-5 w-5" />
+          </Link>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center">
+                <span className="text-xs font-medium text-accent-foreground">JD</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-sidebar-foreground">John Doe</p>
+                <p className="text-xs text-muted-foreground truncate">Support Analyst</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground">John Doe</p>
-              <p className="text-xs text-muted-foreground truncate">Support Analyst</p>
-            </div>
+            <Link
+              href="/settings"
+              className={cn(
+                "rounded-lg p-2 text-sm font-medium transition-colors",
+                "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                pathname === "/settings"
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                  : "text-sidebar-foreground",
+              )}
+            >
+              <Settings className="h-5 w-5" />
+            </Link>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
