@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTheme } from "next-themes"
 import { SidebarNav } from "@/components/sidebar-nav"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,11 +14,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
-import { User, Bell, Shield, Palette, Save, Upload } from "lucide-react"
+import { User, Bell, Shield, Palette, Save, Upload, Monitor, Sun, Moon } from "lucide-react"
 import { useViewPreferences } from "@/hooks/use-view-preferences"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 export default function SettingsPage() {
+  const { setTheme } = useTheme()
   const [profile, setProfile] = useState({
     name: "John Doe",
     email: "john.doe@company.com",
@@ -36,7 +38,7 @@ export default function SettingsPage() {
     systemAlerts: true,
   })
 
-  const { viewMode, detailViewMode, setViewMode, setDetailViewMode } = useViewPreferences()
+  const { viewMode, setViewMode } = useViewPreferences()
 
   const [preferences, setPreferences] = useState({
     theme: "system",
@@ -75,7 +77,7 @@ export default function SettingsPage() {
         <div className="p-8">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Settings</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
               <p className="text-muted-foreground">
                 Manage your account preferences, notifications, and application settings.
               </p>
@@ -104,16 +106,16 @@ export default function SettingsPage() {
               <TabsContent value="profile" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg font-serif">Profile Information</CardTitle>
+                    <CardTitle className="text-lg">Profile Information</CardTitle>
                     <CardDescription>Update your personal information and contact details</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-8">
                     <div className="flex items-center gap-6">
                       <Avatar className="h-20 w-20">
-                        <AvatarFallback className="text-lg">JD</AvatarFallback>
+                        <AvatarFallback className="text-2xl">JD</AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline">
                           <Upload className="h-4 w-4 mr-2" />
                           Upload Photo
                         </Button>
@@ -121,7 +123,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name</Label>
                         <Input
@@ -198,7 +200,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <Button onClick={handleSaveProfile}>
+                    <Button onClick={handleSaveProfile} className="w-full sm:w-auto">
                       <Save className="h-4 w-4 mr-2" />
                       Save Profile
                     </Button>
@@ -209,12 +211,12 @@ export default function SettingsPage() {
               <TabsContent value="notifications" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg font-serif">Notification Preferences</CardTitle>
+                    <CardTitle className="text-lg">Notification Preferences</CardTitle>
                     <CardDescription>Choose how you want to be notified about updates and activities</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>Email Notifications</Label>
                           <p className="text-sm text-muted-foreground">Receive notifications via email</p>
@@ -226,8 +228,7 @@ export default function SettingsPage() {
                           }
                         />
                       </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>Push Notifications</Label>
                           <p className="text-sm text-muted-foreground">Receive browser push notifications</p>
@@ -239,8 +240,7 @@ export default function SettingsPage() {
                           }
                         />
                       </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>Ticket Assignments</Label>
                           <p className="text-sm text-muted-foreground">Notify when tickets are assigned to you</p>
@@ -252,8 +252,7 @@ export default function SettingsPage() {
                           }
                         />
                       </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>Status Updates</Label>
                           <p className="text-sm text-muted-foreground">Notify when ticket status changes</p>
@@ -263,8 +262,7 @@ export default function SettingsPage() {
                           onCheckedChange={(checked) => setNotifications({ ...notifications, statusUpdates: checked })}
                         />
                       </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>Weekly Reports</Label>
                           <p className="text-sm text-muted-foreground">Receive weekly performance summaries</p>
@@ -274,8 +272,7 @@ export default function SettingsPage() {
                           onCheckedChange={(checked) => setNotifications({ ...notifications, weeklyReports: checked })}
                         />
                       </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <Label>System Alerts</Label>
                           <p className="text-sm text-muted-foreground">Critical system and security alerts</p>
@@ -287,7 +284,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <Button onClick={handleSaveNotifications}>
+                    <Button onClick={handleSaveNotifications} className="w-full sm:w-auto">
                       <Save className="h-4 w-4 mr-2" />
                       Save Notifications
                     </Button>
@@ -298,93 +295,121 @@ export default function SettingsPage() {
               <TabsContent value="preferences" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg font-serif">Application Preferences</CardTitle>
+                    <CardTitle className="text-lg">Application Preferences</CardTitle>
                     <CardDescription>Customize your application experience and interface</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label>Theme</Label>
-                        <Select
-                          value={preferences.theme}
-                          onValueChange={(value) => setPreferences({ ...preferences, theme: value })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Tickets Per Page</Label>
-                        <Select
-                          value={preferences.ticketsPerPage}
-                          onValueChange={(value) => setPreferences({ ...preferences, ticketsPerPage: value })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="10">10</SelectItem>
-                            <SelectItem value="25">25</SelectItem>
-                            <SelectItem value="50">50</SelectItem>
-                            <SelectItem value="100">100</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                  <CardContent className="space-y-8">
+                    <div className="space-y-6">
+                      <h3 className="text-base font-semibold">Theme</h3>
+                      <RadioGroup
+                        defaultValue="system"
+                        onValueChange={setTheme}
+                        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+                      >
+                        <div>
+                          <RadioGroupItem value="light" id="light" className="peer sr-only" />
+                          <Label
+                            htmlFor="light"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <Sun className="h-6 w-6 mb-2" />
+                            Light
+                          </Label>
+                        </div>
+                        <div>
+                          <RadioGroupItem value="dark" id="dark" className="peer sr-only" />
+                          <Label
+                            htmlFor="dark"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <Moon className="h-6 w-6 mb-2" />
+                            Dark
+                          </Label>
+                        </div>
+                        <div>
+                          <RadioGroupItem value="system" id="system" className="peer sr-only" />
+                          <Label
+                            htmlFor="system"
+                            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                          >
+                            <Monitor className="h-6 w-6 mb-2" />
+                            System
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
 
-                      <div className="space-y-3">
-                        <Label>Default Ticket Layout</Label>
-                        <RadioGroup
-                          value={viewMode}
-                          onValueChange={(value) => setViewMode(value as "kanban" | "table")}
-                          className="flex gap-4"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="kanban" id="kanban" />
-                            <Label htmlFor="kanban">Kanban</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="table" id="table" />
-                            <Label htmlFor="table">Table</Label>
-                          </div>
-                        </RadioGroup>
+                    <Separator />
+
+                    <div className="space-y-6">
+                      <h3 className="text-base font-semibold">Display Options</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label>Default Ticket Layout</Label>
+                          <Select
+                            value={viewMode}
+                            onValueChange={(value) => setViewMode(value as "kanban" | "table")}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="kanban">Kanban</SelectItem>
+                              <SelectItem value="table">Table</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Tickets Per Page</Label>
+                          <Select
+                            value={preferences.ticketsPerPage}
+                            onValueChange={(value) => setPreferences({ ...preferences, ticketsPerPage: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="10">10</SelectItem>
+                              <SelectItem value="25">25</SelectItem>
+                              <SelectItem value="50">50</SelectItem>
+                              <SelectItem value="100">100</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                     </div>
 
                     <Separator />
 
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label>Auto Refresh</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Automatically refresh ticket data every 30 seconds
-                          </p>
+                    <div className="space-y-6">
+                      <h3 className="text-base font-semibold">General</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div className="space-y-0.5">
+                            <Label>Auto Refresh</Label>
+                            <p className="text-sm text-muted-foreground">
+                              Automatically refresh ticket data every 30 seconds
+                            </p>
+                          </div>
+                          <Switch
+                            checked={preferences.autoRefresh}
+                            onCheckedChange={(checked) => setPreferences({ ...preferences, autoRefresh: checked })}
+                          />
                         </div>
-                        <Switch
-                          checked={preferences.autoRefresh}
-                          onCheckedChange={(checked) => setPreferences({ ...preferences, autoRefresh: checked })}
-                        />
-                      </div>
-                      <Separator />
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label>Sound Notifications</Label>
-                          <p className="text-sm text-muted-foreground">Play sound for new ticket assignments</p>
+                        <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div className="space-y-0.5">
+                            <Label>Sound Notifications</Label>
+                            <p className="text-sm text-muted-foreground">Play sound for new ticket assignments</p>
+                          </div>
+                          <Switch
+                            checked={preferences.soundNotifications}
+                            onCheckedChange={(checked) => setPreferences({ ...preferences, soundNotifications: checked })}
+                          />
                         </div>
-                        <Switch
-                          checked={preferences.soundNotifications}
-                          onCheckedChange={(checked) => setPreferences({ ...preferences, soundNotifications: checked })}
-                        />
                       </div>
                     </div>
 
-                    <Button onClick={handleSavePreferences}>
+                    <Button onClick={handleSavePreferences} className="w-full sm:w-auto">
                       <Save className="h-4 w-4 mr-2" />
                       Save Preferences
                     </Button>
@@ -395,13 +420,13 @@ export default function SettingsPage() {
               <TabsContent value="security" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg font-serif">Security Settings</CardTitle>
+                    <CardTitle className="text-lg">Security Settings</CardTitle>
                     <CardDescription>Manage your account security and access permissions</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="space-y-4">
-                      <div>
-                        <h4 className="font-medium mb-2">Current Permissions</h4>
+                      <div className="rounded-lg border p-4">
+                        <h4 className="font-semibold mb-2">Current Permissions</h4>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="secondary">View Tickets</Badge>
                           <Badge variant="secondary">Edit Tickets</Badge>
@@ -410,24 +435,27 @@ export default function SettingsPage() {
                           <Badge variant="secondary">View Reports</Badge>
                         </div>
                       </div>
-                      <Separator />
-                      <div>
-                        <h4 className="font-medium mb-2">Password</h4>
-                        <p className="text-sm text-muted-foreground mb-4">Last changed 45 days ago</p>
+                      <div className="flex items-center justify-between rounded-lg border p-4">
+                        <div>
+                          <h4 className="font-semibold">Password</h4>
+                          <p className="text-sm text-muted-foreground mt-1">Last changed 45 days ago</p>
+                        </div>
                         <Button variant="outline">Change Password</Button>
                       </div>
-                      <Separator />
-                      <div>
-                        <h4 className="font-medium mb-2">Two-Factor Authentication</h4>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Add an extra layer of security to your account
-                        </p>
+                      <div className="flex items-center justify-between rounded-lg border p-4">
+                        <div>
+                          <h4 className="font-semibold">Two-Factor Authentication</h4>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Add an extra layer of security to your account
+                          </p>
+                        </div>
                         <Button variant="outline">Enable 2FA</Button>
                       </div>
-                      <Separator />
-                      <div>
-                        <h4 className="font-medium mb-2">Active Sessions</h4>
-                        <p className="text-sm text-muted-foreground mb-4">Manage your active login sessions</p>
+                      <div className="flex items-center justify-between rounded-lg border p-4">
+                        <div>
+                          <h4 className="font-semibold">Active Sessions</h4>
+                          <p className="text-sm text-muted-foreground mt-1">Manage your active login sessions</p>
+                        </div>
                         <Button variant="outline">View Sessions</Button>
                       </div>
                     </div>

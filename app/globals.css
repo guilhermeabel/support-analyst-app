@@ -135,4 +135,9 @@
   h6 {
     @apply font-sans font-bold;
   }
+
+  /* Add border to unchecked switch */
+  [data-state="unchecked"] {
+    @apply border border-border;
+  }
 }
