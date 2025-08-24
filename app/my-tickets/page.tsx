@@ -4,12 +4,24 @@ import { useState, useMemo } from "react"
 import { SidebarNav } from "@/components/sidebar-nav"
 import { TicketsFilters } from "@/components/tickets-filters"
 import { TicketsTable } from "@/components/tickets-table"
-import { TicketDetailModal } from "@/components/ticket-detail-modal"
+import { TicketDetailContent } from "@/components/ticket-detail-content"
 import { MyTicketsStats } from "@/components/my-tickets-stats"
 import { MyTicketsKanban } from "@/components/my-tickets-kanban"
 import { Button } from "@/components/ui/button"
-import { LayoutGrid, List } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Settings } from "lucide-react"
 import { mockTickets, type Ticket } from "@/lib/mock-data"
+import { useViewPreferences } from "@/hooks/use-view-preferences"
 
 // Current logged-in user (John Doe based on sidebar)
 const CURRENT_USER = {
@@ -24,8 +36,7 @@ export default function MyTicketsPage() {
   const [selectedPriority, setSelectedPriority] = useState("All")
   const [selectedStatus, setSelectedStatus] = useState("All")
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban")
+  const { viewMode, setViewMode } = useViewPreferences()
 
   // Filter tickets assigned to current user
   const myTickets = useMemo(() => {
@@ -58,12 +69,6 @@ export default function MyTicketsPage() {
 
   const handleTicketClick = (ticket: Ticket) => {
     setSelectedTicket(ticket)
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedTicket(null)
   }
 
   const handleStatusChange = (ticketId: string, newStatus: Ticket["status"]) => {
@@ -74,73 +79,80 @@ export default function MyTicketsPage() {
   return (
     <div className="flex h-screen bg-background">
       <SidebarNav />
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-3xl font-serif font-bold text-foreground mb-2">My Tickets</h1>
-                  <p className="text-muted-foreground">
-                    Focus on tickets assigned specifically to you. Track your progress and manage your workload.
+      <ResizablePanelGroup direction="horizontal" className="flex-1">
+        <ResizablePanel defaultSize={selectedTicket ? 60 : 100}>
+          <main className="flex-1 overflow-auto h-screen">
+            <div className="p-8">
+              <div className="max-w-7xl mx-auto">
+                <div className="mb-8">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-3xl font-bold text-foreground mb-2">My Tickets</h1>
+                      <p className="text-muted-foreground">
+                        Focus on tickets assigned specifically to you. Track your progress and manage your workload.
+                      </p>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>View Options</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuRadioGroup
+                          value={viewMode}
+                          onValueChange={(value) => setViewMode(value as "kanban" | "table")}
+                        >
+                          <DropdownMenuRadioItem value="kanban">Kanban</DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="table">Table</DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                <MyTicketsStats tickets={myTickets} />
+
+                <TicketsFilters
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  selectedGroup={selectedGroup}
+                  onGroupChange={setSelectedGroup}
+                  selectedPriority={selectedPriority}
+                  onPriorityChange={setSelectedPriority}
+                  selectedStatus={selectedStatus}
+                  onStatusChange={setSelectedStatus}
+                  onClearFilters={handleClearFilters}
+                />
+
+                <div className="mb-4">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {filteredTickets.length} of {myTickets.length} assigned tickets
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === "kanban" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("kanban")}
-                  >
-                    <LayoutGrid className="h-4 w-4 mr-2" />
-                    Kanban
-                  </Button>
-                  <Button
-                    variant={viewMode === "table" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("table")}
-                  >
-                    <List className="h-4 w-4 mr-2" />
-                    Table
-                  </Button>
-                </div>
+
+                {viewMode === "kanban" ? (
+                  <MyTicketsKanban tickets={filteredTickets} onTicketClick={handleTicketClick} />
+                ) : (
+                  <TicketsTable tickets={filteredTickets} onTicketClick={handleTicketClick} />
+                )}
               </div>
             </div>
-
-            <MyTicketsStats tickets={myTickets} />
-
-            <TicketsFilters
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              selectedGroup={selectedGroup}
-              onGroupChange={setSelectedGroup}
-              selectedPriority={selectedPriority}
-              onPriorityChange={setSelectedPriority}
-              selectedStatus={selectedStatus}
-              onStatusChange={setSelectedStatus}
-              onClearFilters={handleClearFilters}
-            />
-
-            <div className="mb-4">
-              <p className="text-sm text-muted-foreground">
-                Showing {filteredTickets.length} of {myTickets.length} assigned tickets
-              </p>
-            </div>
-
-            {viewMode === "kanban" ? (
-              <MyTicketsKanban tickets={filteredTickets} onTicketClick={handleTicketClick} />
-            ) : (
-              <TicketsTable tickets={filteredTickets} onTicketClick={handleTicketClick} />
-            )}
-          </div>
-        </div>
-      </main>
-
-      <TicketDetailModal
-        ticket={selectedTicket}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onStatusChange={handleStatusChange}
-      />
+          </main>
+        </ResizablePanel>
+        {selectedTicket && (
+          <>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={40} minSize={30} maxSize={50}>
+              <aside className="h-full">
+                <TicketDetailContent ticket={selectedTicket} onStatusChange={handleStatusChange} />
+              </aside>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
     </div>
   )
 }

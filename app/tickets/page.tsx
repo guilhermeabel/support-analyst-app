@@ -4,7 +4,8 @@ import { useState, useMemo } from "react"
 import { SidebarNav } from "@/components/sidebar-nav"
 import { TicketsFilters } from "@/components/tickets-filters"
 import { TicketsTable } from "@/components/tickets-table"
-import { TicketDetailModal } from "@/components/ticket-detail-modal"
+import { TicketDetailContent } from "@/components/ticket-detail-content"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { mockTickets, type Ticket } from "@/lib/mock-data"
 
 export default function TicketsPage() {
@@ -13,7 +14,6 @@ export default function TicketsPage() {
   const [selectedPriority, setSelectedPriority] = useState("All")
   const [selectedStatus, setSelectedStatus] = useState("All")
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const filteredTickets = useMemo(() => {
     return mockTickets.filter((ticket) => {
@@ -41,12 +41,6 @@ export default function TicketsPage() {
 
   const handleTicketClick = (ticket: Ticket) => {
     setSelectedTicket(ticket)
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedTicket(null)
   }
 
   const handleStatusChange = (ticketId: string, newStatus: Ticket["status"]) => {
@@ -57,46 +51,53 @@ export default function TicketsPage() {
   return (
     <div className="flex h-screen bg-background">
       <SidebarNav />
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Open Tickets</h1>
-              <p className="text-muted-foreground">
-                Manage all incoming support tickets organized by group and priority. Click on any ticket to view
-                details.
-              </p>
+      <ResizablePanelGroup direction="horizontal" className="flex-1">
+        <ResizablePanel defaultSize={selectedTicket ? 60 : 100}>
+          <main className="flex-1 overflow-auto h-screen">
+            <div className="p-8">
+              <div className="max-w-7xl mx-auto">
+                <div className="mb-8">
+                  <h1 className="text-3xl font-bold text-foreground mb-2">Open Tickets</h1>
+                  <p className="text-muted-foreground">
+                    Manage all incoming support tickets organized by group and priority. Click on any ticket to view
+                    details.
+                  </p>
+                </div>
+
+                <TicketsFilters
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  selectedGroup={selectedGroup}
+                  onGroupChange={setSelectedGroup}
+                  selectedPriority={selectedPriority}
+                  onPriorityChange={setSelectedPriority}
+                  selectedStatus={selectedStatus}
+                  onStatusChange={setSelectedStatus}
+                  onClearFilters={handleClearFilters}
+                />
+
+                <div className="mb-4">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {filteredTickets.length} of {mockTickets.length} tickets
+                  </p>
+                </div>
+
+                <TicketsTable tickets={filteredTickets} onTicketClick={handleTicketClick} />
+              </div>
             </div>
-
-            <TicketsFilters
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              selectedGroup={selectedGroup}
-              onGroupChange={setSelectedGroup}
-              selectedPriority={selectedPriority}
-              onPriorityChange={setSelectedPriority}
-              selectedStatus={selectedStatus}
-              onStatusChange={setSelectedStatus}
-              onClearFilters={handleClearFilters}
-            />
-
-            <div className="mb-4">
-              <p className="text-sm text-muted-foreground">
-                Showing {filteredTickets.length} of {mockTickets.length} tickets
-              </p>
-            </div>
-
-            <TicketsTable tickets={filteredTickets} onTicketClick={handleTicketClick} />
-          </div>
-        </div>
-      </main>
-
-      <TicketDetailModal
-        ticket={selectedTicket}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onStatusChange={handleStatusChange}
-      />
+          </main>
+        </ResizablePanel>
+        {selectedTicket && (
+          <>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={40} minSize={30} maxSize={50}>
+              <aside className="h-full">
+                <TicketDetailContent ticket={selectedTicket} onStatusChange={handleStatusChange} />
+              </aside>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
     </div>
   )
 }

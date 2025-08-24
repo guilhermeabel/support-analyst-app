@@ -57,7 +57,7 @@ function TicketCard({ ticket, onTicketClick }: { ticket: Ticket; onTicketClick: 
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm font-medium truncate">{ticket.subject}</CardTitle>
+            <CardTitle className="text-sm font-medium">{ticket.subject}</CardTitle>
             <CardDescription className="text-xs font-mono text-muted-foreground mt-1">{ticket.id}</CardDescription>
           </div>
           <DropdownMenu>
@@ -76,20 +76,18 @@ function TicketCard({ ticket, onTicketClick }: { ticket: Ticket; onTicketClick: 
       <CardContent className="pt-0">
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{ticket.description}</p>
-
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
               <Avatar className="h-5 w-5">
                 <AvatarFallback className="text-xs">{ticket.user.initials}</AvatarFallback>
               </Avatar>
-              <span className="text-xs text-muted-foreground">{ticket.user.name}</span>
+              <span>{ticket.user.name}</span>
             </div>
             <Badge variant="outline" className={`text-xs ${getPriorityColor(ticket.priority)}`}>
               {ticket.priority}
             </Badge>
           </div>
-
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex flex-wrap gap-1">
               {ticket.tags.slice(0, 2).map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs">
@@ -102,7 +100,7 @@ function TicketCard({ ticket, onTicketClick }: { ticket: Ticket; onTicketClick: 
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
               {formatDate(ticket.updatedAt)}
             </div>

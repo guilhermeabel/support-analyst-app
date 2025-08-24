@@ -1,18 +1,19 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Source_Sans_3, Playfair_Display } from "next/font/google"
+import { Roboto, Open_Sans } from "next/font/google"
 import "./globals.css"
 
-const sourceSans = Source_Sans_3({
+const roboto = Roboto({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-source-sans",
+  variable: "--font-roboto",
+  weight: ["400", "700"],
 })
 
-const playfairDisplay = Playfair_Display({
+const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-open-sans",
 })
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${sourceSans.variable} ${playfairDisplay.variable} antialiased`}>
+    <html lang="en" className={`${roboto.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans">{children}</body>
     </html>
   )

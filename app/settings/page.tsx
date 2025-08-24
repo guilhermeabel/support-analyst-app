@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import { User, Bell, Shield, Palette, Save, Upload } from "lucide-react"
+import { useViewPreferences } from "@/hooks/use-view-preferences"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState({
@@ -34,9 +36,10 @@ export default function SettingsPage() {
     systemAlerts: true,
   })
 
+  const { viewMode, detailViewMode, setViewMode, setDetailViewMode } = useViewPreferences()
+
   const [preferences, setPreferences] = useState({
     theme: "system",
-    defaultView: "kanban",
     ticketsPerPage: "25",
     autoRefresh: true,
     soundNotifications: false,
@@ -299,7 +302,7 @@ export default function SettingsPage() {
                     <CardDescription>Customize your application experience and interface</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label>Theme</Label>
                         <Select
@@ -313,21 +316,6 @@ export default function SettingsPage() {
                             <SelectItem value="light">Light</SelectItem>
                             <SelectItem value="dark">Dark</SelectItem>
                             <SelectItem value="system">System</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Default Ticket View</Label>
-                        <Select
-                          value={preferences.defaultView}
-                          onValueChange={(value) => setPreferences({ ...preferences, defaultView: value })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="kanban">Kanban Board</SelectItem>
-                            <SelectItem value="table">Table View</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -347,6 +335,24 @@ export default function SettingsPage() {
                             <SelectItem value="100">100</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label>Default Ticket Layout</Label>
+                        <RadioGroup
+                          value={viewMode}
+                          onValueChange={(value) => setViewMode(value as "kanban" | "table")}
+                          className="flex gap-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="kanban" id="kanban" />
+                            <Label htmlFor="kanban">Kanban</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="table" id="table" />
+                            <Label htmlFor="table">Table</Label>
+                          </div>
+                        </RadioGroup>
                       </div>
                     </div>
 

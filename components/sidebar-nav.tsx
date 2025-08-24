@@ -55,7 +55,7 @@ export function SidebarNav() {
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
         {!isCollapsed && (
           <div>
-            <h1 className="text-lg font-serif font-bold text-sidebar-foreground">Support Hub</h1>
+            <h1 className="text-lg font-bold text-sidebar-foreground">Support Hub</h1>
             <p className="text-xs text-muted-foreground">Analyst Dashboard</p>
           </div>
         )}
@@ -65,7 +65,7 @@ export function SidebarNav() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className={cn("flex-1 space-y-2", isCollapsed ? "p-2" : "p-4")}>
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -73,16 +73,19 @@ export function SidebarNav() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                 isActive ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" : "text-sidebar-foreground",
+                isCollapsed && "justify-center",
               )}
             >
               <item.icon className={cn("flex-shrink-0", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
               {!isCollapsed && (
                 <div className="flex flex-col">
                   <span>{item.name}</span>
-                  <span className="text-xs text-muted-foreground">{item.description}</span>
+                  <span className="text-xs text-muted-foreground group-hover:text-sidebar-accent-foreground/80">
+                    {item.description}
+                  </span>
                 </div>
               )}
             </Link>
