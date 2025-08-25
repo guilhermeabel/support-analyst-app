@@ -29,15 +29,22 @@
   --chart-3: #be123c;
   --chart-4: #f59e0b;
   --chart-5: #6b7280;
+  --chart-blue: 217 91% 60%;
+  --chart-green: 142 71% 45%;
   --radius: 0.5rem;
   --sidebar: #f1f5f9;
   --sidebar-foreground: #1f2937;
   --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: #1f2937;
-  --sidebar-accent: #8b5cf6;
-  --sidebar-accent-foreground: #ffffff;
+  --sidebar-accent: #e2e8f0;
+  /* Updated from purple to slate-200 */
+  --sidebar-accent-foreground: #1f2937;
+  /* Updated from white to dark grey */
   --sidebar-border: #e5e7eb;
   --sidebar-ring: rgba(139, 92, 246, 0.5);
+  --accent-hover: #f1f5f9;
+  /* Light grey for hover */
+  /* Light grey for hover */
 }
 
 .dark {
@@ -65,14 +72,20 @@
   --chart-3: #be123c;
   --chart-4: #f59e0b;
   --chart-5: #6b7280;
+  --chart-blue: 215 94% 68%;
+  --chart-green: 145 63% 59%;
   --sidebar: #1e293b;
   --sidebar-foreground: #f1f5f9;
   --sidebar-primary: #374151;
   --sidebar-primary-foreground: #f1f5f9;
-  --sidebar-accent: #8b5cf6;
-  --sidebar-accent-foreground: #ffffff;
+  --sidebar-accent: #334155;
+  /* Updated from purple to slate-700 */
+  --sidebar-accent-foreground: #f1f5f9;
+  /* Kept as light grey */
   --sidebar-border: #374151;
   --sidebar-ring: rgba(139, 92, 246, 0.5);
+  --accent-hover: #374151;
+  /* Dark grey for hover */
 }
 
 @theme inline {
@@ -100,6 +113,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-blue: var(--chart-blue);
+  --color-chart-green: var(--chart-green);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -112,6 +127,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-accent-hover: var(--accent-hover);
   /* Added font family variables for design brief fonts */
   --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-open-sans), ui-serif, Georgia, serif;
@@ -139,5 +155,11 @@
   /* Add border to unchecked switch */
   [data-state="unchecked"] {
     @apply border border-border;
+  }
+
+  /* Override default hover color for dropdowns and buttons */
+  .cursor-pointer:hover,
+  button:hover {
+    @apply bg-accent-hover;
   }
 }

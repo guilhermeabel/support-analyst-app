@@ -37,7 +37,9 @@ export default function MyTicketsPage() {
 
   // Filter tickets assigned to current user
   const myTickets = useMemo(() => {
-    return mockTickets.filter((ticket) => ticket.assignee?.name === CURRENT_USER.name)
+    return mockTickets.filter(
+      (ticket) => ticket.assignee?.name === CURRENT_USER.name && ticket.status !== "done",
+    )
   }, [])
 
   const filteredTickets = useMemo(() => {

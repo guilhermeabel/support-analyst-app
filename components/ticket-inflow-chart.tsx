@@ -18,11 +18,11 @@ const ticketInflowData = [
 const chartConfig = {
   tickets: {
     label: "New Tickets",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-blue))",
   },
   resolved: {
     label: "Resolved",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-green))",
   },
 }
 
@@ -30,7 +30,7 @@ export function TicketInflowChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-serif">Ticket Activity</CardTitle>
+        <CardTitle className="text-lg">Ticket Activity</CardTitle>
         <CardDescription>New tickets vs resolved tickets over the last 7 days</CardDescription>
       </CardHeader>
       <CardContent>
@@ -39,12 +39,12 @@ export function TicketInflowChart() {
             <AreaChart data={ticketInflowData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorTickets" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(var(--chart-blue))" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(var(--chart-blue))" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorResolved" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(var(--chart-green))" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(var(--chart-green))" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
@@ -58,7 +58,7 @@ export function TicketInflowChart() {
               <Area
                 type="monotone"
                 dataKey="tickets"
-                stroke="hsl(var(--chart-1))"
+                stroke="hsl(var(--chart-blue))"
                 fillOpacity={1}
                 fill="url(#colorTickets)"
                 strokeWidth={2}
@@ -66,7 +66,7 @@ export function TicketInflowChart() {
               <Area
                 type="monotone"
                 dataKey="resolved"
-                stroke="hsl(var(--chart-2))"
+                stroke="hsl(var(--chart-green))"
                 fillOpacity={1}
                 fill="url(#colorResolved)"
                 strokeWidth={2}

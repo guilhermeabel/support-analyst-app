@@ -6,11 +6,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal, User } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
 import type { Ticket } from "@/lib/mock-data"
 
 interface TicketsTableProps {
   tickets: Ticket[]
-  onTicketClick: (ticket: Ticket) => void
+  onTicketClick?: (ticket: Ticket) => void
+  isArchive?: boolean
 }
 
 const getPriorityColor = (priority: string) => {
@@ -60,13 +62,23 @@ const formatDate = (dateString: string) => {
   }
 }
 
-export function TicketsTable({ tickets, onTicketClick }: TicketsTableProps) {
+export function TicketsTable({ tickets, onTicketClick, isArchive = false }: TicketsTableProps) {
+  const router = useRouter()
+
   if (tickets.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">No tickets found matching your criteria.</p>
       </div>
     )
+  }
+
+  const handleRowClick = (ticket: Ticket) => {
+    if (isArchive) {
+      router.push(`/archive/${ticket.id}`)
+    } else if (onTicketClick) {
+      onTicketClick(ticket)
+    }
   }
 
   return (
@@ -91,7 +103,7 @@ export function TicketsTable({ tickets, onTicketClick }: TicketsTableProps) {
             <TableRow
               key={ticket.id}
               className="cursor-pointer hover:bg-muted/50"
-              onClick={() => onTicketClick(ticket)}
+              onClick={() => handleRowClick(ticket)}
             >
               <TableCell className="font-mono text-sm">{ticket.id}</TableCell>
               <TableCell>
@@ -164,7 +176,7 @@ export function TicketsTable({ tickets, onTicketClick }: TicketsTableProps) {
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.stopPropagation()
-                        onTicketClick(ticket)
+                        handleRowClick(ticket)
                       }}
                     >
                       View Details

@@ -49,12 +49,22 @@ interface MetricCardProps {
   trend: "up" | "down"
   icon: React.ComponentType<{ className?: string }>
   unit?: string
+  invertTrendColor?: boolean
 }
 
-function MetricCard({ title, description, value, change, trend, icon: Icon, unit = "" }: MetricCardProps) {
-  const isPositive = trend === "up"
+function MetricCard({
+  title,
+  description,
+  value,
+  change,
+  trend,
+  icon: Icon,
+  unit = "",
+  invertTrendColor = false,
+}: MetricCardProps) {
+  const isPositive = invertTrendColor ? trend === "down" : trend === "up"
   const changeColor = isPositive ? "text-green-600" : "text-red-600"
-  const TrendIcon = isPositive ? TrendingUp : TrendingDown
+  const TrendIcon = isPositive ? TrendingDown : TrendingUp
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -101,6 +111,7 @@ export function DashboardMetrics() {
         trend={metricsData.avgResponseTime.trend}
         icon={Clock}
         unit="h"
+        invertTrendColor={true}
       />
       <MetricCard
         title="Unassigned Tickets"
@@ -109,6 +120,7 @@ export function DashboardMetrics() {
         change={metricsData.unassignedTickets.change}
         trend={metricsData.unassignedTickets.trend}
         icon={Users}
+        invertTrendColor={true}
       />
       <MetricCard
         title="My Active Tickets"

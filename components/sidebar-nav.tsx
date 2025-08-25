@@ -3,9 +3,11 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { Home, List, User, Book, Settings, ChevronLeft, ChevronRight } from "lucide-react"
+import { Home, List, User, Book, Settings, ChevronLeft, ChevronRight, Archive } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { Separator } from "./ui/separator"
+import { NotificationsPanel } from "./notifications-panel"
 
 const navigation = [
   {
@@ -32,17 +34,24 @@ const navigation = [
     icon: Book,
     description: "Company docs and resources",
   },
+  {
+    name: "Archive",
+    href: "/archive",
+    icon: Archive,
+    description: "Closed and resolved tickets",
+  },
 ]
 
 export function SidebarNav() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [newTicketsCount, setNewTicketsCount] = useState(3) // Mock notification count
 
   return (
     <div
       className={cn(
         "flex flex-col h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64",
+        isCollapsed ? "w-16" : "w-72",
       )}
     >
       {/* Header */}
@@ -58,37 +67,61 @@ export function SidebarNav() {
         </Button>
       </div>
 
-      {/* Navigation */}
-      <nav className={cn("flex-1 space-y-2", isCollapsed ? "p-2" : "p-4")}>
-        {navigation.map((item) => {
-          const isActive = pathname === item.href
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                isActive ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" : "text-sidebar-foreground",
-                isCollapsed && "justify-center",
-              )}
-            >
-              <item.icon className={cn("flex-shrink-0", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
-              {!isCollapsed && (
-                <div className="flex flex-col">
-                  <span>{item.name}</span>
-                  <span className="text-xs text-muted-foreground group-hover:text-sidebar-accent-foreground/80">
-                    {item.description}
-                  </span>
-                </div>
-              )}
-            </Link>
-          )
-        })}
-      </nav>
+      {/* Navigation & Notifications Container */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <nav className={cn("space-y-2", isCollapsed ? "p-2" : "p-4")}>
+          {navigation.map((item) => {
+            const isActive = pathname === item.href
+            const showBadge = item.name === "Open Tickets" && newTicketsCount > 0
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative",
+                  "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                  isActive ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm" : "text-sidebar-foreground",
+                  isCollapsed && "justify-center",
+                )}
+              >
+                <item.icon className={cn("flex-shrink-0", isCollapsed ? "h-5 w-5" : "h-4 w-4")} />
+                {!isCollapsed && (
+                  <div className="flex flex-1 items-center justify-between">
+                    <div className="flex flex-col">
+                      <span>{item.name}</span>
+                      <span className="text-xs text-muted-foreground group-hover:text-sidebar-accent-foreground/80">
+                        {item.description}
+                      </span>
+                    </div>
+                    {showBadge && (
+                      <div className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {newTicketsCount}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {isCollapsed && showBadge && (
+                  <div className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></div>
+                )}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* Notifications Panel */}
+        {!isCollapsed && (
+          <>
+            <Separator className="my-2" />
+            <div className="flex-1 min-h-0 py-2">
+              <NotificationsPanel />
+            </div>
+          </>
+        )}
+      </div>
 
       {/* Footer */}
-      <div className="mt-auto p-4 border-t border-sidebar-border">
+      <div className="p-4 border-t border-sidebar-border">
         {isCollapsed ? (
           <Link
             href="/settings"

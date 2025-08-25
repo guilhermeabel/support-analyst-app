@@ -19,6 +19,41 @@ interface KnowledgeBaseItem {
   estimatedReadTime: string
 }
 
+export interface Ticket {
+  id: string
+  subject: string
+  description: string
+  user: {
+    name: string
+    email: string
+    initials: string
+  }
+  assignee?: {
+    name: string
+    email: string
+    initials: string
+  }
+  tags: string[]
+  priority: "low" | "medium" | "high" | "critical"
+  status: "backlog" | "todo" | "doing" | "in_review" | "done"
+  group: string
+  createdAt: string
+  updatedAt: string
+  // Finalization fields
+  hoursTaken?: number
+  rootCause?: string
+  finalizationSummary?: string
+}
+
+export interface Notification {
+  id: string
+  type: "new_ticket" | "new_message" | "kb_update"
+  title: string
+  description: string
+  createdAt: string
+  read: boolean
+}
+
 export const mockUsers: User[] = [
   {
     name: "Sarah Chen",
@@ -213,6 +248,116 @@ export const mockTickets: Ticket[] = [
     group: "Infrastructure",
     createdAt: "2024-01-12T13:45:00Z",
     updatedAt: "2024-01-12T13:45:00Z",
+  },
+  {
+    id: "TKT-009",
+    subject: "User cannot reset their password",
+    description:
+      "A user is reporting that the 'Forgot Password' link is not sending them an email. We've verified their email address is correct in the system. The email delivery service might be failing.",
+    user: {
+      name: "Olivia Martinez",
+      email: "olivia.martinez@company.com",
+      initials: "OM",
+    },
+    assignee: {
+      name: "Jane Smith",
+      email: "jane.smith@company.com",
+      initials: "JS",
+    },
+    tags: ["password-reset", "email", "user-account"],
+    priority: "high",
+    status: "done",
+    group: "API",
+    createdAt: "2024-01-11T10:00:00Z",
+    updatedAt: "2024-01-11T12:30:00Z",
+    hoursTaken: 2.5,
+    rootCause: "The email delivery service provider had an outage that affected our ability to send password reset emails. The issue was not with our internal systems.",
+    finalizationSummary:
+      "1. Confirmed user's report of not receiving password reset email. 2. Checked internal email logs and found no errors. 3. Checked status page of email delivery provider and confirmed an ongoing outage. 4. Monitored the provider's status and confirmed when the issue was resolved. 5. Notified the user that the issue was fixed and they could now reset their password.",
+  },
+  {
+    id: "TKT-010",
+    subject: "Feature request: Export data to CSV",
+    description:
+      "Users are requesting the ability to export their transaction history to a CSV file. This would help them with their own internal accounting and reporting.",
+    user: {
+      name: "William Garcia",
+      email: "william.garcia@company.com",
+      initials: "WG",
+    },
+    tags: ["feature-request", "csv-export", "reporting"],
+    priority: "low",
+    status: "done",
+    group: "API",
+    createdAt: "2024-01-10T14:00:00Z",
+    updatedAt: "2024-01-12T16:45:00Z",
+  },
+]
+
+export const mockNotifications: Notification[] = [
+  {
+    id: "1",
+    type: "new_ticket",
+    title: "New Ticket #TKT-011",
+    description: "User is reporting a login issue.",
+    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 minutes ago
+    read: false,
+  },
+  {
+    id: "2",
+    type: "new_message",
+    title: "New Message in #TKT-003",
+    description: "Alex Rodriguez replied.",
+    createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 minutes ago
+    read: false,
+  },
+  {
+    id: "3",
+    type: "kb_update",
+    title: "KB Article Updated",
+    description: "'Database Connection Troubleshooting' was updated.",
+    createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+    read: true,
+  },
+  {
+    id: "4",
+    type: "new_ticket",
+    title: "New Ticket #TKT-012",
+    description: "API rate limiting question.",
+    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+    read: true,
+  },
+  {
+    id: "5",
+    type: "new_message",
+    title: "New Message in #TKT-007",
+    description: "David Brown provided more details.",
+    createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+    read: true,
+  },
+  {
+    id: "6",
+    type: "kb_update",
+    title: "New Article Published",
+    description: "'Advanced API Rate Limiting' is now available.",
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+    read: true,
+  },
+  {
+    id: "7",
+    type: "new_ticket",
+    title: "New Ticket #TKT-013",
+    description: "SSL certificate renewal question.",
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+    read: true,
+  },
+  {
+    id: "8",
+    type: "new_message",
+    title: "New Message in #TKT-001",
+    description: "Sarah Chen has confirmed the fix.",
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+    read: true,
   },
 ]
 
